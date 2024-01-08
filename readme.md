@@ -31,7 +31,7 @@ C 07.01 сессия с браузера держится не более 3ех 
 
 Данный скрипт позволяет автоматически собирать ракеты, появляющиеся в игре, а также автоматически тапать до достижения определенного баланса. Ниже приведены параметры, которые можно редактировать для настройки скрипта:
 
-- `globalscore`: параметр, отвечающий за определение целевого баланса. Скрипт будет автоматически тапать для достижения этого баланса.
+- `powerLimitForAutotap`: параметр, отвечающий за определение целевого баланса. Скрипт будет автоматически тапать для достижения этого баланса.`Добавлен лимит в x2 от вашего уровня тапа(необходимо чтобы собирать все ракеты и коины за них)`
 - `countclicks`: параметр, определяющий количество нажатий для выполнения функции. Скрипт будет выполнять функцию заданное количество раз.
 
 По умолчанию скрипт выполняет нажатия каждые 500 мс, но вы можете экспериментировать с этим значением для достижения наилучших результатов.
@@ -39,6 +39,19 @@ C 07.01 сессия с браузера держится не более 3ех 
 ```javascript
 setInterval(click, 500);
 ```
+
+### Дополнительные функции для ручного контроля
+Информация взята с форка [yingxing-dev](https://github.com/yingxing-dev). Спасибо за вклад в развитие скрипта. 
+#### Остановка автокликера
+```javascript
+stop();
+```
+#### Возобновление работы автокликера
+```javascript
+start();
+```
+
+
 ### Как запустить
 
 1. Нажмите клавишу F12 (или откройте Исходный код страницы),
@@ -46,8 +59,17 @@ setInterval(click, 500);
 
 Сам скрипт:
 ```javascript
-globalscore = 1000
+powerLimitForAutotap = 100
 countclicks = 34
+recharging = false
+skipClick = false
+
+let app_root = document.querySelector('div[class^="_root"]')
+let multipleClicks = app_root[Object.keys(app_root)[1]].children[9].props.profile.multipleClicks
+if (multipleClicks === undefined || multipleClicks === null) { multipleClicks = 0; }
+
+
+
 async function click() {
     let cc = document.querySelectorAll('div[class^="_notcoin"]');
     let scoreElement = document.querySelector('div[class^="_scoreCurrent"]');
@@ -56,12 +78,24 @@ async function click() {
     try {
         let imrocket = document.querySelectorAll('img[class^="_root"]');
         imrocket[0][Object.keys(imrocket[0])[1]].onClick();
+        recharging = false;
     } catch (error) {}
     
     for (let step = 0; step < countclicks; step++) {
         score = parseInt(scoreElement.textContent);
 
-        if (score > globalscore) {
+        if (skipClick) {
+            break;
+        }
+        
+        if (recharging) {
+            if (score >= powerLimitForAutotap) {
+                recharging = false;
+            }
+            break;
+        }
+
+        if (score > multipleClicks*2) {
             try {
                 await new Promise((resolve) => {
                     cc[0][Object.keys(cc[0])[1]].onTouchStart('');
@@ -69,10 +103,20 @@ async function click() {
                 });
             } catch (error) {}
         } else {
+            recharging = true;
             break;
         }
     }
 }
 
 setInterval(click, 500);
+
+function start() {
+    skipClick = false;
+}
+
+function stop() {
+    skipClick = true;
+}
 ```
+
