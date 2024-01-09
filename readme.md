@@ -1,5 +1,5 @@
 Author: https://t.me/alexnotcoin
-
+donate in toncoin: UQAI3rZmGrNh25_jDOx2E2axXYr-9jtknzyrvFEyT8jl_MMJ
 ## Запуск Notcoin с компьютера
 ### ВАЖНО
 C 07.01 сессия с браузера держится не более 3ех часов.
