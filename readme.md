@@ -69,7 +69,7 @@ recharging = false
 skipClick = false
 
 let app_root = document.querySelector('div[class^="_root"]')
-let multipleClicks = app_root[Object.keys(app_root)[1]].children[9].props.profile.multipleClicks
+let multipleClicks = 45
 if (multipleClicks === undefined || multipleClicks === null) { multipleClicks = 0; }
 
 

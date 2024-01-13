@@ -4,26 +4,27 @@ recharging = false
 skipClick = false
 
 let app_root = document.querySelector('div[class^="_root"]')
-let multipleClicks = app_root[Object.keys(app_root)[1]].children[9].props.profile.multipleClicks
+let multipleClicks = 45
+if (multipleClicks === undefined || multipleClicks === null) { multipleClicks = 0; }
 
 async function click() {
     let cc = document.querySelectorAll('div[class^="_notcoin"]');
     let scoreElement = document.querySelector('div[class^="_scoreCurrent"]');
     let score = parseInt(scoreElement.textContent);
-    
+
     try {
         let imrocket = document.querySelectorAll('img[class^="_root"]');
         imrocket[0][Object.keys(imrocket[0])[1]].onClick();
         recharging = false;
     } catch (error) {}
-    
+
     for (let step = 0; step < countclicks; step++) {
         score = parseInt(scoreElement.textContent);
 
         if (skipClick) {
             break;
         }
-        
+
         if (recharging) {
             if (score >= powerLimitForAutotap) {
                 recharging = false;
